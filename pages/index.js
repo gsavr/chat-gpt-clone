@@ -1,12 +1,52 @@
 import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import logo from "../images/ai-logo.png";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default function Home() {
+  const { isLoading, error, user } = useUser();
+
+  if (error) return <div>{error.message}</div>;
+
   return (
-    <div>
+    <>
       <Head>
-        <title>Next JS ChatGPT Starter</title>
+        <title>Chatty AI</title>
       </Head>
-      <h1>Welcome to the Next JS &amp; ChatGPT Starter</h1>
-    </div>
+      {isLoading ? (
+        <div> Loading...</div>
+      ) : (
+        <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#2D3748] text-center text-white">
+          <Image src={logo} width={70} alt="logo" />
+          <h1>Chatty AI</h1>
+          <div>
+            <div>
+              <Link className="btn" href="/api/auth/login">
+                Login
+              </Link>
+              <Link className="btn" href="/api/auth/signup">
+                signup
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx.req, ctx.res);
+  if (!!session) {
+    return {
+      redirect: {
+        destination: "/chat",
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
