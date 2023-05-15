@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import logo from "../images/ai-logo.png";
 import { getSession } from "@auth0/nextjs-auth0";
+import { Footer } from "components/Footer/Footer";
 
 export default function Home() {
   const { isLoading, error, user } = useUser();
@@ -18,19 +19,22 @@ export default function Home() {
       {isLoading ? (
         <div> Loading...</div>
       ) : (
-        <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#2D3748] text-center text-white">
-          <Image src={logo} width={70} alt="logo" />
-          <h1>Chatty AI</h1>
-          <div>
+        <div className="flex min-h-screen w-full flex-col bg-[#2D3748] text-center text-white">
+          <div className="flex h-[95vh] w-full flex-col items-center justify-center text-center ">
+            <Image src={logo} width={70} alt="logo" />
+            <h1>Chatty AI</h1>
             <div>
-              <Link className="btn" href="/api/auth/login">
-                Login
-              </Link>
-              <Link className="btn" href="/api/auth/signup">
-                signup
-              </Link>
+              <div>
+                <Link className="btn" href="/api/auth/login">
+                  Login
+                </Link>
+                <Link className="btn" href="/api/auth/signup">
+                  signup
+                </Link>
+              </div>
             </div>
           </div>
+          <Footer />
         </div>
       )}
     </>
