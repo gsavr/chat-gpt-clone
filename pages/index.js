@@ -2,9 +2,10 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import logo from "../images/ai-logo.png";
 import { getSession } from "@auth0/nextjs-auth0";
 import { Footer } from "components/Footer/Footer";
+import logo from "../images/ai-logo.png";
+import intro from "../images/intro.gif";
 
 export default function Home() {
   const { isLoading, error, user } = useUser();
@@ -23,6 +24,12 @@ export default function Home() {
           <div className="flex h-[95vh] w-full flex-col items-center justify-center text-center ">
             <Image src={logo} width={70} alt="logo" />
             <h1>Chatty AI</h1>
+            <Image
+              src={intro}
+              width={600}
+              alt="intro"
+              className="mix-blend-lighten shadow-2xl"
+            />
             <div>
               <div>
                 <Link className="btn" href="/api/auth/login">
