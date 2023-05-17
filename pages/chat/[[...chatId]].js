@@ -61,7 +61,7 @@ export default function ChatPage() {
         <div className="flex h-[95vh]">
           <ChatSideBar />
           <div id="main" className="flex flex-1 flex-col overflow-auto ">
-            <div className="flex-1 p-10">
+            <div className="flex-1 p-2">
               {renderChatMessages()}
               {incomingResponse && (
                 <Message role="assistant" content={incomingResponse} />

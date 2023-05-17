@@ -6,9 +6,14 @@ export const Message = ({ role, content }) => {
   const { user } = useUser();
 
   return (
-    <div className="flex gap-5 p-2">
-      <div className="flex w-[30px]">
-        {role === "user" ? (
+    <div
+      className={`flex gap-5 p-4 ${
+        role === "assistant" ? "rounded-sm bg-[#3C4655]" : ""
+      } `}
+    >
+      <div className="flex h-[30px] w-[30px]">
+        {/* when user is talking and there is a user  */}
+        {role === "user" && !!user ? (
           <Image
             src={user.picture}
             width={30}
