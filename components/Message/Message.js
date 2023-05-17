@@ -1,6 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
 import aiAvatar from "../../images/ai-avatar.png";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const Message = ({ role, content }) => {
   const { user } = useUser();
@@ -31,7 +32,10 @@ export const Message = ({ role, content }) => {
           />
         )}
       </div>
-      <div className="flex flex-1">{content}</div>
+      {/* prose is part of tailwind css typography */}
+      <div className="prose prose-invert flex flex-1">
+        <ReactMarkdown>{content}</ReactMarkdown>
+      </div>
     </div>
   );
 };

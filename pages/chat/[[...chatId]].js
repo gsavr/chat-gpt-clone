@@ -6,11 +6,13 @@ import { v4 as uuid } from "uuid";
 import { ChatSideBar } from "components/ChatSidebar";
 import { Footer } from "components/Footer/Footer";
 import { Message } from "components/Message";
+import { MessageForm } from "components/MessageForm";
 
 export default function ChatPage() {
   const [messageText, setMessagetext] = useState("");
   const [incomingResponse, setIncomingResponse] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [loadingResponse, setLoadingResponse] = useState(false);
 
   const renderChatMessages = () => {
     return chatMessages.map(({ _id, role, content }) => {
@@ -20,6 +22,7 @@ export default function ChatPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingResponse(true);
 
     setChatMessages((prev) => {
       const chatMessages = [
@@ -50,6 +53,7 @@ export default function ChatPage() {
       //console.log("Message", message);
       setIncomingResponse((s) => `${s}${message.content}`);
     });
+    setLoadingResponse(false);
   };
 
   return (
@@ -67,21 +71,12 @@ export default function ChatPage() {
                 <Message role="assistant" content={incomingResponse} />
               )}
             </div>
-            <div className="bg-[#283141] p-5">
-              <form onSubmit={handleSubmit}>
-                <fieldset className="flex gap-2">
-                  <textarea
-                    value={messageText}
-                    onChange={(e) => setMessagetext(e.target.value)}
-                    placeholder="Send a message"
-                    className="w-full resize-none rounded-md bg-[#3C4655] p-2 text-white focus:outline-slate-400"
-                  />
-                  <button className="btn" type="submit">
-                    Send
-                  </button>
-                </fieldset>
-              </form>
-            </div>
+            <MessageForm
+              handleSubmit={handleSubmit}
+              loadingResponse={loadingResponse}
+              messageText={messageText}
+              setMessagetext={setMessagetext}
+            />
           </div>
         </div>
         <Footer />
