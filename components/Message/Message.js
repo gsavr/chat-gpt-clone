@@ -9,10 +9,10 @@ export const Message = ({ role, content }) => {
   return (
     <div
       className={`flex gap-5 p-4 ${
-        role === "assistant" ? "rounded-sm bg-[#3C4655]" : ""
+        role === "assistant" ? "rounded-xl bg-[#3C4655]" : ""
       } `}
     >
-      <div className="flex h-[30px] w-[30px]">
+      <div className="h-[30px] w-[30px]">
         {/* when user is talking and there is a user  */}
         {role === "user" && !!user ? (
           <Image
@@ -33,7 +33,7 @@ export const Message = ({ role, content }) => {
         )}
       </div>
       {/* prose is part of tailwind css typography */}
-      <div className="prose prose-invert flex flex-1">
+      <div className="prose prose-invert flex-1 overflow-x-hidden">
         <ReactMarkdown>{content}</ReactMarkdown>
       </div>
     </div>

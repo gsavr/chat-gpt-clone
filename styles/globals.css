@@ -6,6 +6,9 @@
   html {
     scroll-behavior: smooth;
   }
+  body {
+    @apply bg-[#3C4655];
+  }
   h1,
   h2,
   h3,

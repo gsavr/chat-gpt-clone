@@ -7,6 +7,7 @@ import { ChatSideBar } from "components/ChatSidebar";
 import { Footer } from "components/Footer/Footer";
 import { Message } from "components/Message";
 import { MessageForm } from "components/MessageForm";
+import { ChatLanding } from "components/ChatLanding";
 
 export default function ChatPage() {
   const [messageText, setMessagetext] = useState("");
@@ -61,11 +62,12 @@ export default function ChatPage() {
       <Head>
         <title>Chatty AI Chats</title>
       </Head>
-      <div className="flex min-h-screen flex-col bg-[#2D3748] text-white ">
+      <div className="flex min-h-screen flex-col overflow-hidden bg-[#2D3748] text-white">
         <div className="flex h-[95vh]">
           <ChatSideBar />
-          <div id="main" className="flex flex-1 flex-col overflow-auto ">
-            <div className="flex-1 p-2">
+          <div id="main" className="flex flex-1 flex-col overflow-x-hidden">
+            <div className="flex-1 justify-end overflow-y-auto scroll-auto p-2">
+              <ChatLanding />
               {renderChatMessages()}
               {incomingResponse && (
                 <Message role="assistant" content={incomingResponse} />
