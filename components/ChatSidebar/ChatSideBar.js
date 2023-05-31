@@ -30,7 +30,13 @@ export const ChatSideBar = ({ chatId }) => {
           href={`/chat/${_id}`}
           className={`side-menu-item ${chatId === _id && "bg-[#3C4655]"}`}
         >
-          <FontAwesomeIcon icon={faComment} height={25} /> {title}
+          <FontAwesomeIcon icon={faComment} height={25} />{" "}
+          <span
+            title={title}
+            className="overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            {title}
+          </span>
         </Link>
       );
     });

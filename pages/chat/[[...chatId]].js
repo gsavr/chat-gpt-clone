@@ -12,14 +12,22 @@ import { useRouter } from "next/router";
 import clientPromise from "lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export default function ChatPage({ chatId }) {
+export default function ChatPage({ chatId, title, messages = [] }) {
   const [messageText, setMessagetext] = useState("");
   const [newChatId, setNewChatId] = useState(null);
   const [incomingResponse, setIncomingResponse] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const router = useRouter();
+  //console.log(title, messages);
 
+  //when we click through to a different chat, reset the following
+  useEffect(() => {
+    // setChatMessages([]);
+    // setNewChatId(null);
+  }, [chatId]);
+
+  //travel to /id when new chat is started
   useEffect(() => {
     if (!loadingResponse && newChatId) {
       setNewChatId(null);
@@ -27,8 +35,10 @@ export default function ChatPage({ chatId }) {
     }
   }, [newChatId, loadingResponse, router]);
 
+  const allMessages = [...messages, ...chatMessages];
+
   const renderChatMessages = () => {
-    return chatMessages.map(({ _id, role, content }) => {
+    return allMessages.map(({ _id, role, content }) => {
       return <Message key={_id} role={role} content={content} />;
     });
   };
@@ -71,6 +81,7 @@ export default function ChatPage({ chatId }) {
         setIncomingResponse((s) => `${s}${message.content}`);
       }
     });
+    setIncomingResponse("");
     setLoadingResponse(false);
   };
 
@@ -85,7 +96,9 @@ export default function ChatPage({ chatId }) {
           <div id="main" className="flex flex-1 flex-col overflow-x-hidden">
             <div className="flex-1 justify-end overflow-y-auto scroll-auto p-2">
               {/* area where messages are displayed */}
-              {chatMessages.length === 0 && <ChatLanding />}
+              {chatMessages.length === 0 && messages.length === 0 && (
+                <ChatLanding />
+              )}
               {renderChatMessages()}
               {incomingResponse && (
                 <Message role="assistant" content={incomingResponse} />
@@ -129,6 +142,11 @@ export const getServerSideProps = async (ctx) => {
       props: {
         chatId,
         title: chat.title,
+        messages: chat.messages.map((message) => ({
+          ...message,
+          // add a temp id since MongoDB does not store an id in the array
+          _id: uuid(),
+        })),
       },
     };
   }
