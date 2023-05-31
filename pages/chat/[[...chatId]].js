@@ -18,14 +18,30 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const [incomingResponse, setIncomingResponse] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [loadingResponse, setLoadingResponse] = useState(false);
+  const [fullMessage, setFullMessage] = useState("");
   const router = useRouter();
   //console.log(title, messages);
 
   //when we click through to a different chat, reset the following
   useEffect(() => {
-    // setChatMessages([]);
-    // setNewChatId(null);
+    setChatMessages([]);
+    setNewChatId(null);
   }, [chatId]);
+
+  // save the newly streamed message to  chatMessages
+  useEffect(() => {
+    if (!loadingResponse && fullMessage) {
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          _id: uuid(),
+          role: "asssitant",
+          content: fullMessage,
+        },
+      ]);
+      setFullMessage("");
+    }
+  }, [fullMessage, loadingResponse]);
 
   //travel to /id when new chat is started
   useEffect(() => {
@@ -65,13 +81,15 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ message: messageText }),
+      body: JSON.stringify({ chatId, message: messageText }),
     });
     const data = response.body;
     if (!data) {
       return;
     }
+    //read incoming message in chunks
     const reader = data.getReader();
+    let content = "";
     await streamReader(reader, (message) => {
       //console.log("Message", message);
 
@@ -79,8 +97,12 @@ export default function ChatPage({ chatId, title, messages = [] }) {
         setNewChatId(message.content);
       } else {
         setIncomingResponse((s) => `${s}${message.content}`);
+        //this will allow the incoming message to persist after the stream is over
+        content = content + message.content;
       }
     });
+
+    setFullMessage(content);
     setIncomingResponse("");
     setLoadingResponse(false);
   };

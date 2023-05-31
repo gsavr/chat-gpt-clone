@@ -14,7 +14,7 @@ export const MessageForm = ({
             placeholder={
               !loadingResponse ? "Send a message" : "Waiting for response..."
             }
-            className="w-full resize-none rounded-md bg-[#3C4655] p-2 text-white shadow-inner  shadow-black focus:outline-slate-400"
+            className="w-full resize-none rounded-md bg-[#3C4655] p-2 text-white shadow-inner  shadow-black focus:outline-none"
           />
           <button
             className="btn"
