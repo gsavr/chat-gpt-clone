@@ -15,7 +15,7 @@ export const ChatLanding = () => {
       />
       <h1>Chatty AI</h1>
       <div className="flex flex-col items-center gap-5">
-        <div className="rounded-lg bg-[#3C4655] px-20">
+        <div className="rounded-lg bg-[#3C4655] px-20 shadow-md">
           <div className="flex items-center gap-6">
             <FontAwesomeIcon
               icon={faTerminal}
@@ -32,7 +32,7 @@ export const ChatLanding = () => {
             </ul>
           </div>
         </div>
-        <div className="rounded-lg bg-[#3C4655] px-16">
+        <div className="rounded-lg bg-[#3C4655] px-16 shadow-md">
           <div className="flex items-center gap-6">
             <FontAwesomeIcon
               icon={faMicrochip}
@@ -42,7 +42,7 @@ export const ChatLanding = () => {
           </div>
           <div>
             <ul>
-              <li>I can save out last 5 conversations</li>
+              <li>I can save last 5 conversations</li>
               <li>I can respond to follow up corrections</li>
               <li>I am trained on most data up to 2021</li>
             </ul>
@@ -51,7 +51,7 @@ export const ChatLanding = () => {
 
         <div className=" text-xs">
           Chatty-AI may produce inaccurate information about people, places, or
-          facts.{" "}
+          facts.
         </div>
       </div>
     </div>

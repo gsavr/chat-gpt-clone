@@ -21,7 +21,7 @@ export default function Home() {
         <div> Loading...</div>
       ) : (
         <div className="flex min-h-screen w-full flex-col bg-[#2D3748] text-center text-white">
-          <div className="flex h-[95vh] w-full flex-col items-center justify-center text-center ">
+          <div className="flex h-[80vh] w-full flex-col items-center justify-center text-center ">
             <Image src={logo} width={70} alt="logo" />
             <h1>Chatty AI</h1>
             <Image

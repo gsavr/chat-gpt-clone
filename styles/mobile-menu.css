@@ -1,0 +1,63 @@
+/*Hamburger Menu*/
+.hamburger {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.hamburger-top,
+.hamburger-middle,
+.hamburger-bottom {
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  top: 0;
+  left: 0;
+  /*  background: #fff; */
+  transform: rotate(0);
+  /*all transitional properties*/
+  transition: all 0.5s;
+  background: black;
+}
+
+.hamburger-middle {
+  transform: translateY(7px);
+}
+
+.hamburger-bottom {
+  transform: translateY(14px);
+}
+
+.open {
+  transform: rotate(90deg);
+}
+
+.open .hamburger-top {
+  transform: rotate(45deg) translateY(6px) translateX(6px);
+  background: black;
+}
+
+.open .hamburger-middle {
+  display: none;
+}
+
+.open .hamburger-bottom {
+  transform: rotate(-45deg) translateY(6px) translateX(-6px);
+  background: black;
+}
+@media (max-width: 800px) {
+  .opening {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  .closing {
+    transform: translateX(-300px);
+    opacity: 0;
+  }
+
+  .mobile-menu {
+    @apply absolute bottom-0 left-0 top-0 z-20;
+  }
+}

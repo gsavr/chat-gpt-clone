@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { getSession } from "@auth0/nextjs-auth0";
 import { streamReader } from "openai-edge-stream";
@@ -8,12 +8,24 @@ import { Footer } from "components/Footer/Footer";
 import { Message } from "components/Message";
 import { MessageForm } from "components/MessageForm";
 import { ChatLanding } from "components/ChatLanding";
+import { useRouter } from "next/router";
+import clientPromise from "lib/mongodb";
+import { ObjectId } from "mongodb";
 
-export default function ChatPage() {
+export default function ChatPage({ chatId }) {
   const [messageText, setMessagetext] = useState("");
+  const [newChatId, setNewChatId] = useState(null);
   const [incomingResponse, setIncomingResponse] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [loadingResponse, setLoadingResponse] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loadingResponse && newChatId) {
+      setNewChatId(null);
+      router.push(`/chat/${newChatId}`);
+    }
+  }, [newChatId, loadingResponse, router]);
 
   const renderChatMessages = () => {
     return chatMessages.map(({ _id, role, content }) => {
@@ -52,7 +64,12 @@ export default function ChatPage() {
     const reader = data.getReader();
     await streamReader(reader, (message) => {
       //console.log("Message", message);
-      setIncomingResponse((s) => `${s}${message.content}`);
+
+      if (message.event === "newChatId") {
+        setNewChatId(message.content);
+      } else {
+        setIncomingResponse((s) => `${s}${message.content}`);
+      }
     });
     setLoadingResponse(false);
   };
@@ -63,11 +80,12 @@ export default function ChatPage() {
         <title>Chatty AI Chats</title>
       </Head>
       <div className="flex min-h-screen flex-col overflow-hidden bg-[#2D3748] text-white">
-        <div className="flex h-[95vh]">
-          <ChatSideBar />
+        <div className="flex min-h-screen">
+          <ChatSideBar chatId={chatId} />
           <div id="main" className="flex flex-1 flex-col overflow-x-hidden">
             <div className="flex-1 justify-end overflow-y-auto scroll-auto p-2">
-              <ChatLanding />
+              {/* area where messages are displayed */}
+              {chatMessages.length === 0 && <ChatLanding />}
               {renderChatMessages()}
               {incomingResponse && (
                 <Message role="assistant" content={incomingResponse} />
@@ -88,11 +106,29 @@ export default function ChatPage() {
 }
 
 export const getServerSideProps = async (ctx) => {
+  //if user is not logged in -- redirect to '/'
   const session = await getSession(ctx.req, ctx.res);
   if (!session) {
     return {
       redirect: {
         destination: "/",
+      },
+    };
+  }
+  //get chatId from params in order to pass it as props
+  const chatId = ctx.params?.chatId?.[0] || null;
+  if (chatId) {
+    const { user } = session;
+    const client = await clientPromise;
+    const db = client.db("ChattyAI");
+    const chat = await db.collection("chats").findOne({
+      userId: user.sub,
+      _id: new ObjectId(chatId),
+    });
+    return {
+      props: {
+        chatId,
+        title: chat.title,
       },
     };
   }
