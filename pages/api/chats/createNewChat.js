@@ -7,6 +7,15 @@ export default async function handler(req, res) {
   try {
     const { user } = await getSession(req, res);
     const { message } = req.body;
+
+    //validate message data
+    if (!message || typeof message !== "string" || message.length > 1000) {
+      res.status(422).json({
+        message: "Message must be less than 1000 utf-8 characters",
+      });
+      return;
+    }
+
     const newUserMessage = {
       role: "user",
       content: message,

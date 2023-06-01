@@ -10,11 +10,42 @@ export default async function handler(req, res) {
 
     const { chatId, role, content } = req.body;
 
+    //--- VALIDATION ---
+    //validate chatId as MongoDb Object Id
+    let objectId;
+    try {
+      objectId = new ObjectId(chatId);
+    } catch (e) {
+      res.status(422).json({
+        message: "Invalid Chat ID when adding message to chat",
+      });
+      return;
+    }
+    //validate message data
+    if (
+      !content ||
+      typeof content !== "string" ||
+      (role === "user" && content.length > 1000) ||
+      (role === "assistant" && content.length > 100000)
+    ) {
+      res.status(422).json({
+        message: "Content must be less than 1000 utf-8 characters",
+      });
+      return;
+    }
+    //validate role
+    if (role !== "user" && role !== "assistant") {
+      res.status(422).json({
+        message: "Role must be 'user' or 'assistant'",
+      });
+      return;
+    } //--- END of VALIDATION ---
+
     const chat = await db.collection("chats").findOneAndUpdate(
       {
         //-- search criteria --
         //convert chatId back to mongoDB Object
-        _id: new ObjectId(chatId),
+        _id: objectId,
         //so you can only update a chat belonging to you
         userId: user.sub,
       },

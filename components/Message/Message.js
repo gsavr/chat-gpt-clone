@@ -9,7 +9,7 @@ export const Message = ({ role, content }) => {
   return (
     <div
       className={`flex gap-5 p-4 ${
-        role === "assistant"
+        role === "user"
           ? "rounded-xl bg-[#3C4655]"
           : role === "notice"
           ? "mt-2 rounded-xl bg-red-600"

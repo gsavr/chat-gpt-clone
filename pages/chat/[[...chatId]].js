@@ -172,13 +172,33 @@ export const getServerSideProps = async (ctx) => {
   const chatId = ctx.params?.chatId?.[0] || null;
   //console.log(chatId);
   if (chatId) {
+    //validate chatId as MongoDb Object Id
+    let objectId;
+    try {
+      objectId = new ObjectId(chatId);
+    } catch (e) {
+      return {
+        redirect: {
+          destination: "/chat",
+        },
+      };
+    }
+
     const { user } = session;
     const client = await clientPromise;
     const db = client.db("ChattyAI");
     const chat = await db.collection("chats").findOne({
       userId: user.sub,
-      _id: new ObjectId(chatId),
+      _id: objectId,
     });
+    //validate there is a valid chatId with a chat object
+    if (!chat) {
+      return {
+        redirect: {
+          destination: "/chat",
+        },
+      };
+    }
     return {
       props: {
         chatId,

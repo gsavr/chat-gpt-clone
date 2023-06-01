@@ -11,6 +11,17 @@ export default async function handler(req) {
     const { chatId: chatIdParams, message } = await req.json();
     let chatId = chatIdParams; //using alias since it can also be created in the createNewChat api endpoint
 
+    //validate message data
+    if (!message || typeof message !== "string" || message.length > 1000) {
+      //remember the response is from edge function
+      return new Response(
+        {
+          message: "Message must be less than 1000 utf-8 characters",
+        },
+        { status: 422 }
+      );
+    }
+
     const initialChatMessage = {
       role: "system",
       content:
@@ -131,6 +142,11 @@ export default async function handler(req) {
     );
     return new Response(stream);
   } catch (e) {
-    console.log("ERROR OCCURED IN SEND MESSAGE", e);
+    return new Response(
+      {
+        message: "An error occurred in Send Message",
+      },
+      { status: 500 }
+    );
   }
 }
