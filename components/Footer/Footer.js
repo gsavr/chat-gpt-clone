@@ -44,7 +44,7 @@ export const Footer = () => {
             </div>
             <div>
               <a
-                href="https://github.com/gsavr/movie_search"
+                href="https://github.com/gsavr/chat-gpt-clone"
                 target="_blank"
                 rel="noreferrer"
               >
