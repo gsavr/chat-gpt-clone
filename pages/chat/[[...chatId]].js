@@ -11,6 +11,7 @@ import { ChatLanding } from "components/ChatLanding";
 import { useRouter } from "next/router";
 import clientPromise from "lib/mongodb";
 import { ObjectId } from "mongodb";
+import { HamburgerButton } from "components/HamburgerButton";
 
 export default function ChatPage({ chatId, messages = [] }) {
   const [messageText, setMessagetext] = useState("");
@@ -21,6 +22,11 @@ export default function ChatPage({ chatId, messages = [] }) {
   const [fullMessage, setFullMessage] = useState("");
   // used solely for routeHasChanged
   const [originalChatId, setOriginalChatId] = useState(chatId);
+  //for mobile menu
+  const [open, setOpen] = useState("hidden");
+  const [opening, setOpening] = useState("closing");
+  const [menuOpen, setMenuOpen] = useState("closed");
+  //
   const router = useRouter();
   // console.log(title, messages);
   // If route has changed we can stop the stream in new window
@@ -64,6 +70,16 @@ export default function ChatPage({ chatId, messages = [] }) {
     });
   };
 
+  //for mobile menu
+  const closeMobileMenu = () => {
+    setOpening("closing");
+    setMenuOpen("closed");
+    setTimeout(() => {
+      setOpen("hidden");
+    }, 500);
+  };
+
+  //submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoadingResponse(true);
@@ -123,7 +139,20 @@ export default function ChatPage({ chatId, messages = [] }) {
       </Head>
       <div className="flex min-h-screen flex-col overflow-hidden bg-[#2D3748] text-white">
         <div className="flex min-h-screen">
-          <ChatSideBar chatId={chatId} />
+          <HamburgerButton
+            open={open}
+            setOpen={setOpen}
+            opening={opening}
+            setOpening={setOpening}
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
+          />
+          <ChatSideBar
+            chatId={chatId}
+            open={open}
+            opening={opening}
+            closeMobileMenu={closeMobileMenu}
+          />
           <div id="main" className="flex flex-1 flex-col overflow-x-hidden">
             <div className="flex max-h-[88vh] flex-1 flex-col-reverse  justify-start overflow-scroll p-2">
               <div className="mb-auto">

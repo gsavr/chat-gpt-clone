@@ -7,7 +7,7 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const ChatSideBar = ({ chatId }) => {
+export const ChatSideBar = ({ chatId, open, opening, closeMobileMenu }) => {
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const ChatSideBar = ({ chatId }) => {
           key={_id}
           href={`/chat/${_id}`}
           className={`side-menu-item ${chatId === _id && "bg-[#3C4655]"}`}
-          aria-disabled
+          onClick={() => closeMobileMenu()}
         >
           <FontAwesomeIcon icon={faComment} height={25} />{" "}
           <span
@@ -45,12 +45,14 @@ export const ChatSideBar = ({ chatId }) => {
 
   return (
     <div
-      className={`mobile-menu  flex w-full flex-col justify-between overflow-hidden bg-[#3C4655] transition-all duration-200 md:w-1/3 lg:flex lg:w-1/5 `}
+      // open, opening, mobile-menu all for mobile --- flex deleted since it is a var
+      className={`${open} ${opening} mobile-menu w-full flex-col justify-between overflow-hidden bg-[#3C4655] transition-all duration-200 md:flex md:w-1/4 lg:flex lg:w-1/5 `}
     >
       <div className="bg-[#101318]">
         <Link
           href="/chat"
           className="side-menu-item m-2 bg-[#C1BE46] text-black hover:bg-gray-200"
+          onClick={() => closeMobileMenu()}
         >
           <FontAwesomeIcon icon={faPlusCircle} height={25} /> New Chat
         </Link>
