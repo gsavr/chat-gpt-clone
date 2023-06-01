@@ -29,6 +29,7 @@ export const ChatSideBar = ({ chatId }) => {
           key={_id}
           href={`/chat/${_id}`}
           className={`side-menu-item ${chatId === _id && "bg-[#3C4655]"}`}
+          aria-disabled
         >
           <FontAwesomeIcon icon={faComment} height={25} />{" "}
           <span

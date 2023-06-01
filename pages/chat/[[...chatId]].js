@@ -12,15 +12,19 @@ import { useRouter } from "next/router";
 import clientPromise from "lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export default function ChatPage({ chatId, title, messages = [] }) {
+export default function ChatPage({ chatId, messages = [] }) {
   const [messageText, setMessagetext] = useState("");
   const [newChatId, setNewChatId] = useState(null);
   const [incomingResponse, setIncomingResponse] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [fullMessage, setFullMessage] = useState("");
+  // used solely for routeHasChanged
+  const [originalChatId, setOriginalChatId] = useState(chatId);
   const router = useRouter();
-  //console.log(title, messages);
+  // console.log(title, messages);
+  // If route has changed we can stop the stream in new window
+  const routeHasChanged = chatId !== originalChatId;
 
   //when we click through to a different chat, reset the following
   useEffect(() => {
@@ -30,7 +34,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
 
   // save the newly streamed message to  chatMessages
   useEffect(() => {
-    if (!loadingResponse && fullMessage) {
+    if (!routeHasChanged && !loadingResponse && fullMessage) {
       setChatMessages((prev) => [
         ...prev,
         {
@@ -41,9 +45,9 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       ]);
       setFullMessage("");
     }
-  }, [fullMessage, loadingResponse]);
+  }, [fullMessage, loadingResponse, routeHasChanged]);
 
-  //travel to /id when new chat is started
+  //route to 'chat/id' when new chat is started
   useEffect(() => {
     if (!loadingResponse && newChatId) {
       setNewChatId(null);
@@ -51,6 +55,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
     }
   }, [newChatId, loadingResponse, router]);
 
+  //aggregate all messages to display on chat window
   const allMessages = [...messages, ...chatMessages];
 
   const renderChatMessages = () => {
@@ -62,7 +67,9 @@ export default function ChatPage({ chatId, title, messages = [] }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoadingResponse(true);
+    setOriginalChatId(chatId);
 
+    // add role and id to the message being sent to chatty-ai and for MongoDB
     setChatMessages((prev) => {
       const chatMessages = [
         ...prev,
@@ -76,6 +83,7 @@ export default function ChatPage({ chatId, title, messages = [] }) {
       return chatMessages;
     });
 
+    // send message and wait for response
     const response = await fetch("/api/chats/sendMessage", {
       method: "POST",
       headers: {
@@ -93,12 +101,13 @@ export default function ChatPage({ chatId, title, messages = [] }) {
     await streamReader(reader, (message) => {
       //console.log("Message", message);
 
+      //if new chat - set new chatId and store as a new convo
       if (message.event === "newChatId") {
         setNewChatId(message.content);
       } else {
         setIncomingResponse((s) => `${s}${message.content}`);
         //this will allow the incoming message to persist after the stream is over
-        content = content + message.content;
+        content += message.content;
       }
     });
 
@@ -116,15 +125,24 @@ export default function ChatPage({ chatId, title, messages = [] }) {
         <div className="flex min-h-screen">
           <ChatSideBar chatId={chatId} />
           <div id="main" className="flex flex-1 flex-col overflow-x-hidden">
-            <div className="flex-1 justify-end overflow-y-auto scroll-auto p-2">
-              {/* area where messages are displayed */}
-              {chatMessages.length === 0 && messages.length === 0 && (
-                <ChatLanding />
-              )}
-              {renderChatMessages()}
-              {incomingResponse && (
-                <Message role="assistant" content={incomingResponse} />
-              )}
+            <div className="flex max-h-[88vh] flex-1 flex-col-reverse  justify-start overflow-scroll p-2">
+              <div className="mb-auto">
+                {/* area where messages are displayed */}
+                {!chatMessages.length && !messages.length && <ChatLanding />}
+              </div>
+              <div className="mb-auto">
+                {renderChatMessages()}
+                {incomingResponse && !routeHasChanged && (
+                  <Message role="assistant" content={incomingResponse} />
+                )}
+
+                {incomingResponse && routeHasChanged && (
+                  <Message
+                    role="notice"
+                    content="Only ONE message allowed at a time, please wait until message is received. Your response may not have been recorded."
+                  />
+                )}
+              </div>
             </div>
             <MessageForm
               handleSubmit={handleSubmit}
@@ -152,6 +170,7 @@ export const getServerSideProps = async (ctx) => {
   }
   //get chatId from params in order to pass it as props
   const chatId = ctx.params?.chatId?.[0] || null;
+  //console.log(chatId);
   if (chatId) {
     const { user } = session;
     const client = await clientPromise;

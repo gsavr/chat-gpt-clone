@@ -63,8 +63,8 @@ export default async function handler(req) {
       chatId = json._id;
       //console.log("chatId", chatId);
       newChatId = json._id;
-      //create new chat returns just data for chat -- updated to have chat object
-      chatMessages = json.chat.messages || [];
+      //create new chat returns just data for chat
+      chatMessages = json.messages || [];
     }
 
     const messagesToInclude = [];

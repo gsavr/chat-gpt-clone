@@ -24,11 +24,9 @@ export default async function handler(req, res) {
     //send chat back to client
     res.status(200).json({
       //mongoDB auto generated id needs to be converted to string
-      chat: {
-        _id: chat.insertedId.toString(),
-        messages: [newUserMessage],
-        title: message,
-      },
+      _id: chat.insertedId.toString(),
+      messages: [newUserMessage],
+      title: message,
     });
   } catch (e) {
     res
