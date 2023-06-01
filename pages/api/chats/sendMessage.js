@@ -19,6 +19,7 @@ export default async function handler(req) {
 
     //declare here in order to emit if it is new - if not then we do not send back to client
     let newChatId;
+    let chatMessages = [];
 
     if (chatId) {
       //add message to existing chat
@@ -37,6 +38,9 @@ export default async function handler(req) {
           }),
         }
       );
+      //grab existing convo and pass it to chatgpt to have the convo hx
+      const json = await response.json();
+      chatMessages = json.chat.messages || [];
     } else {
       //create new chat in the DB
       //origin is the domain
@@ -59,7 +63,27 @@ export default async function handler(req) {
       chatId = json._id;
       //console.log("chatId", chatId);
       newChatId = json._id;
+      //create new chat returns just data for chat -- updated to have chat object
+      chatMessages = json.chat.messages || [];
     }
+
+    const messagesToInclude = [];
+    //Mongo stores latest to oldest, ChatGPT needs them oldest to latest
+    chatMessages.reverse();
+    // cgpt tokens are about 4 char per token
+    let usedTokens = 0;
+    for (let message of chatMessages) {
+      const messageTokens = message.content.length / 4;
+      usedTokens += messageTokens;
+      //we are cutting off at 2000 tokens to send back in order to get a response
+      if (usedTokens <= 2000) {
+        messagesToInclude.push(message);
+      } else {
+        break;
+      }
+    }
+    // c-gpt expects oldest to latest
+    messagesToInclude.reverse();
 
     //open the OPEN-AI stream
     const stream = await OpenAIEdgeStream(
@@ -72,7 +96,11 @@ export default async function handler(req) {
         method: "POST",
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: [initialChatMessage, { content: message, role: "user" }],
+          messages: [
+            initialChatMessage,
+            //include all messages up to 2000 tokens - commented out part is for sending one message from form only
+            ...messagesToInclude /* { content: message, role: "user" } */,
+          ],
           stream: true,
         }),
       },

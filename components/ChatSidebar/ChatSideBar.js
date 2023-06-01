@@ -44,7 +44,7 @@ export const ChatSideBar = ({ chatId }) => {
 
   return (
     <div
-      className={`mobile-menu flex w-full flex-col justify-between overflow-hidden bg-[#3C4655] shadow-lg shadow-black transition-all duration-200 md:w-1/3 lg:flex lg:w-1/5 `}
+      className={`mobile-menu  flex w-full flex-col justify-between overflow-hidden bg-[#3C4655] transition-all duration-200 md:w-1/3 lg:flex lg:w-1/5 `}
     >
       <div className="bg-[#101318]">
         <Link
