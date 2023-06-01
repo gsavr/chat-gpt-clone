@@ -181,7 +181,9 @@ export default function ChatPage({ chatId, messages = [] }) {
             />
           </div>
         </div>
-        <Footer />
+        <div className="hidden md:flex">
+          <Footer />
+        </div>
       </div>
     </>
   );
