@@ -106,7 +106,7 @@ export default async function handler(req) {
         },
         method: "POST",
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "gpt-3.5-turbo-0613",
           messages: [
             initialChatMessage,
             //include all messages up to 2000 tokens - commented out part is for sending one message from form only
