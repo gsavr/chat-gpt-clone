@@ -1,34 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ChattyAI
 
-## Getting Started
+ChattyAI is an AI-powered chat application that enables real-time conversations with an AI based on ChatGPT. Experience interactive and dynamic dialogues with the power of cutting-edge technologies.
 
-First, run the development server:
+![ChattyAI App](https://chatty-ai-kappa.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+![preview](/images/intro.gif)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- Real-time Conversations: Engage in dynamic and responsive conversations with an AI-powered ChatGPT model, providing an immersive chat experience.
+- Next.js Framework: Built on the Next.js framework, ChattyAI guarantees high performance, scalability, and efficient server-side rendering.
+- @auth0 Integration: Benefit from secure and hassle-free authentication provided by @auth0, ensuring the privacy and protection of user interactions.
+- MongoDB: Utilize MongoDB for reliable and efficient data storage and retrieval, ensuring seamless chat history management.
+- OpenAI API: Leverage the power of the OpenAI API to generate intelligent and context-aware responses from the ChatGPT model.
+- openai-edge-stream: Utilize the openai-edge-stream library for efficient streaming of AI responses, enabling real-time conversation flow.
+- Server-Sent Events: Experience smooth and reliable server-sent events for instant updates and notifications during chat interactions.
+- Tailwind CSS: Utilize Tailwind CSS for customizable and responsive user interface components, enhancing the overall design and user experience.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Installation
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1. Clone the repository:
 
-## Learn More
+   ```
+   git clone https://github.com/your-username/chattyai.git
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Navigate to the project directory:
+   ```
+   cd chattyai
+   ```
+3. Install the dependencies:
+   ```
+   npm install
+   ```
+4. Configure the necessary environment variables. Refer to the `.env.example` file for reference.
+5. Start the development server:
+   ```
+   npm run dev
+   ```
+6. Open your preferred browser and visit http://localhost:3000 to access ChattyAI.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contribution
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Contributions to ChattyAI are welcome! If you encounter any issues or have suggestions for improvements, please submit them through the GitHub repository.
 
-## Deploy on Vercel
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes and push the branch to your forked repository.
+4. Submit a pull request with a detailed description of your changes.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contact
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+If you have any questions, suggestions, or just want to say hello, feel free to reach out at [giorgiosavron@me.com](mailto:giorgiosavron@me.com). We would love to hear from you!
+
+Thank you for using ChattyAI! Enjoy your conversations with the AI.
