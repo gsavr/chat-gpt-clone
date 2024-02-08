@@ -11,7 +11,7 @@ export const Footer = () => {
         <div className="flex flex-col items-center justify-between space-y-12 md:flex-row md:space-y-0">
           <div className="mt-14">
             <div className="flex space-x-3">
-              <div>&copy; 2023 Giorgio Savron</div>
+              <div>&copy; 2024, Giorgio Savron Development</div>
             </div>
           </div>
           {/*  Social  */}
